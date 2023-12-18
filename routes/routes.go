@@ -6,8 +6,8 @@ import (
 	
 )
 
-func Init(e *echo.Echo) {
+func Init(e *echo.Echo, apiCfg *handlers.ApiConfig ) {
 	v1 := e.Group("/v1")
-	v1.GET("/", handlers.HomeHandler)
-	v1.POST("/search", handlers.PostHandler)
+	v1.GET("/", apiCfg.HomeHandler)
+	v1.POST("/search", apiCfg.PostHandler)
 }
