@@ -93,7 +93,7 @@ func (apiCfg ApiConfig) PostHandler(c echo.Context) error {
 	}
 
 	go apiCfg.DB.CreateWord(c.Request().Context(), database.CreateWordParams{
-		Word: wordDef.Word,
+		Word: myData.Message,
 		Origin: sql.NullString{
 			String: wordDef.Origin,
 			Valid:  true,
