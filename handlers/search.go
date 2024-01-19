@@ -60,32 +60,48 @@ func (apiCfg ApiConfig) PostHandler(c echo.Context) error {
 			},
 			{Role: openai.ChatMessageRoleAssistant,
 				Content: fmt.Sprintf(responseFormat,
-					"Your mind no go touch ground",                        // word
-					"Pidgin",                       // origin
-					"phrase",                         // type
-					"You won't get peace of mind",                // definition
-					"",                   // fullWord
+					"Iyanu",                        // word
+					"Yorùbá",                       // origin
+					"name",                         // type
+					"God's miracle",                // definition
+					"Iyanuoluwa",                   // fullWord
+					"Iyanu likes playing football", // sentence
+					"Iyanu means miracle and oluwa means God", // etymology
+				)},
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: "What does the phrase, your mind no go touch ground mean",
+			},
+
+			{Role: openai.ChatMessageRoleAssistant,
+				Content: fmt.Sprintf(responseFormat,
+					"Your mind no go touch ground",          // word
+					"Pidgin",                                // origin
+					"phrase",                                // type
+					"You won't get peace of mind",           // definition
+					"",                                      // fullWord
 					"I swear, your mind no go touch ground", // sentence
 					"Coined from the yoruba phrase , ekan e oni baale", // etymology
 				)},
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: "What does the phrase, your mind no go touch ground mean",
-				},
-				{Role: openai.ChatMessageRoleAssistant,
-					Content: fmt.Sprintf(responseFormat,
-						"Iyanu",                        // word
-						"Yorùbá",                       // origin
-						"name",                         // type
-						"God's miracle",                // definition
-						"Iyanuoluwa",                   // fullWord
-						"Iyanu likes playing football", // sentence
-						"Iyanu means miracle and oluwa means God", // etymology
-					)},
-				
 			{
 				Role:    openai.ChatMessageRoleUser,
-				Content: fmt.Sprintf("what about %s,make sure the meaning is at least 15 words, use the above format in a stringified json, if you don't know just return null, always return stringified json, take your time, always return in the above format, no matter in the input, return value of empty string if necessary, if it's a phrase make the word key have the value of phrase", myData.Message),
+				Content: "What does the word, kini mean",
+			},
+
+			{Role: openai.ChatMessageRoleAssistant,
+				Content: fmt.Sprintf(responseFormat,
+					"Kini",   // word
+					"Yorùbá", // origin
+					"phrase", // type
+					"Kini can mean what or which. It is often used to ask questions or to seek clarification about something. ", // definition
+					"Iyanuoluwa", // fullWord
+					"`Kini o nso?` means `What is happening?` or `Kini o wa nle?` means `What are you doing?`", // sentence
+					"Derived from the yoruba language", // etymology
+				)},
+
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: fmt.Sprintf("what about %s,make sure the meaning is at least 15 words, use the above format in a stringified json, if you don't know just return null, always return stringified json, take your time, always return in the above format, no matter in the input, return value of empty string if necessary, if it's a phrase make the word key have the value of phrase, the sentence generated must be in the same language if it's a phrase ", myData.Message),
 			},
 		},
 	}
@@ -136,11 +152,9 @@ func (apiCfg ApiConfig) PostHandler(c echo.Context) error {
 			String: wordDef.Sentence,
 			Valid:  true,
 		},
-
 	})
-	
+
 	fmt.Println(res, err)
-	
 
 	// Return the response as JSON.
 	return c.JSON(http.StatusOK, wordDef)
