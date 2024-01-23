@@ -16,12 +16,3 @@ create table dictionary (
 
 
 DROP TABLE dictionary;
-```
-
-
-username = doadmin
-password = AVNS_i7vGtCjBVIy6R-E-eU3
-host = db-postgresql-ioi-do-user-15640582-0.c.db.ondigitalocean.com
-port = 25060
-database = defaultdb
-sslmode = require

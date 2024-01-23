@@ -16,15 +16,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
-
-
 func main() {
 	godotenv.Load()
 	e := echo.New()
 	config := middleware.RateLimiterConfig{
-	
+		Skipper: middleware.DefaultSkipper,
 		Store: middleware.NewRateLimiterMemoryStoreWithConfig(
-			middleware.RateLimiterMemoryStoreConfig{Rate: 5, Burst: 5, ExpiresIn: 24 * time.Hour},
+			middleware.RateLimiterMemoryStoreConfig{Rate: 5, Burst: 5, ExpiresIn: 3 * time.Hour},
 		),
 		IdentifierExtractor: func(ctx echo.Context) (string, error) {
 			id := ctx.RealIP()
@@ -34,14 +32,12 @@ func main() {
 		ErrorHandler: func(context echo.Context, err error) error {
 			return context.JSON(http.StatusForbidden, nil)
 		},
-		DenyHandler: func(context echo.Context, identifier string,err error) error {
+		DenyHandler: func(context echo.Context, identifier string, err error) error {
 			return context.JSON(http.StatusTooManyRequests, nil)
 		},
 	}
-	
-	
-	
 
+	e.Use(middleware.RateLimiterWithConfig(config))
 	API_KEY := os.Getenv("OPENAI_API_KEY")
 	dbURL := os.Getenv("DB_URL")
 	if API_KEY == "" || dbURL == "" {
@@ -60,7 +56,6 @@ func main() {
 		DB: queries,
 	}
 
-
 	if err != nil {
 		fmt.Println("Error connecting to database: ", err)
 		os.Exit(1)
@@ -70,10 +65,10 @@ func main() {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
 	}))
-	e.Use(middleware.RateLimiterWithConfig(config))
+
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	routes.Init(e,apiCfg)
+	routes.Init(e, apiCfg)
 	e.Start(":8080")
 }
